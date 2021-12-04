@@ -1,57 +1,36 @@
 "use strict";
 
-const arrLength = 7;
+const arrWeekdays = [
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+  "Воскресенье",
+];
 
-let arr = [];
-
-const isNumber = function (num) {
-  return !isNaN(parseFloat(num)) && isFinite(num);
-};
-
-const promptNumber = function () {
-  let n;
-  do {
-    n = prompt("Введите число");
-  } while (!isNumber(n));
-  return +n;
-};
-
-const fillArray = function () {
-  for (let i = 0; i < arrLength; i++) {
-    arr[i] = promptNumber();
-  }
-};
-
-const checkArray = function () {
-  for (let i = 0; i < arrLength; i++) {
-    if (arr[i].toString()[0] == 2 || arr[i].toString()[0] == 4) {
-      console.log(arr[i]);
-    }
-  }
-};
-
-const isPrime = function (prime) {
-  let counter = 0;
-  for (let i = 2; i <= prime; i++) {
-    if (prime % i == 0) {
-      counter++;
-    }
-  }
-  if (counter == 1) {
-    return true;
+const todayWeekday = function () {
+  var today = new Date().getDay();
+  if (today == 0) {
+    return 6;
   } else {
-    return false;
+    return --today;
   }
 };
 
-const primeNumbers = function () {
-  for (let i = 2; i <= 100; i++) {
-    if (isPrime(i)) {
-      console.log(i + " - делители этого числа: 1 и " + i);
+for (var i = 0; i < arrWeekdays.length; i++) {
+  if (i >= 5) {
+    if (i == todayWeekday()) {
+      document.getElementById("result").innerHTML += "<i><b>" + arrWeekdays[i] + "</b></i><br/>";
+    } else {
+      document.getElementById("result").innerHTML += "<i>" + arrWeekdays[i] + "</i><br/>";
+    }
+  } else {
+    if (i == todayWeekday()) {
+      document.getElementById("result").innerHTML += "<b>" + arrWeekdays[i] + "</b><br/>";
+    } else {
+      document.getElementById("result").innerHTML += arrWeekdays[i] + "<br/>";
     }
   }
-};
-
-fillArray();
-checkArray();
-primeNumbers();
+}
