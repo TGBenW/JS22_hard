@@ -5,8 +5,6 @@ const isNumber = function (num) {
 };
 
 const getAllServicePrices = function () {
-  let sum = 0;
-
   let n;
   do {
     n = prompt("Введите число");
