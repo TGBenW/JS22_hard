@@ -1,110 +1,122 @@
 "use strict";
 
-const appData = {
-  title: "",
-  screens: [],
-  screenPrice: 0,
-  adaptive: true,
-  rollback: 10,
-  allServicePrices: 0,
-  fullPrice: 0,
-  servicePercentPrice: 0,
-  servicesArr: [
-    {name: "", price: 0},
-    {name: "", price: 0}
-  ],
-  asking: function () {
-    do {
-      appData.title = prompt("Как называется ваш проект?", "Новый проект").trim();
-    } while (appData.isNumber(appData.title) || appData.title.length === 0);
+const arrWeekdays = [
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
+  "Воскресенье",
+];
 
-    for (let i = 0; i < 2; i++) {
-      let name;
-      let price = 0;
+const arrMonths = [
+  "января",
+  "февраля",
+  "марта",
+  "апреля",
+  "мая",
+  "июня",
+  "июля",
+  "августа",
+  "сентября",
+  "октября",
+  "ноября",
+  "декабря"];
 
-      do {
-        name = prompt("Какие типы экранов нужно разработать?", "Простой").trim();
-      } while (appData.isNumber(name) || name.length === 0);
-
-      do {
-        price = prompt("Сколько будет стоить данная работа?");
-        console.log(price, typeof price);
-      } while (!appData.isNumber(price));
-
-      appData.screens.push({ id: i, name: name, price: +price });
-      console.log(appData.screens);
-    }
-
-    for (let i = 0; i < 2; i++) {
-      do {
-        appData.servicesArr[i].name = prompt("Какой дополнительный тип услуги нужен?", "Метрика").trim();
-      } while (appData.isNumber(appData.servicesArr[i].name) || appData.servicesArr[i].name.length === 0);
-
-      do {
-        appData.servicesArr[i].price = prompt("Сколько это будет стоить?");
-      } while (!appData.isNumber(appData.servicesArr[i].price));
-    }
-
-    appData.adaptive = !!confirm("Нужен ли адаптив на сайте?");
-  },
-  addPrices: function () {
-    let screenPriceArray = [];
-    for (let i = 0; i < appData.screens.length; i++) {
-      screenPriceArray[i] = appData.screens[i].price;
-    }
-    appData.screenPrice = screenPriceArray.reduce(function(a, b) {
-      return a + b;
-    });
-    console.log("!!!! - " + appData.screenPrice);
-
-    for (let i = 0; i < appData.servicesArr.length; i++) {
-      appData.allServicePrices += +appData.servicesArr[i].price;
-    }
-  },
-  isNumber: function (num) {
-    return !isNaN(parseFloat(num)) && isFinite(num);
-  },
-  getRollbackMessage: function (price) {
-    if (price >= 30000) {
-      return "Даем скидку в 10%";
-    } else if (price >= 15000 && price < 300000) {
-      return "Даем скидку в 5%";
-    } else if (price >= 0 && price < 15000) {
-      return "Скидка не предусмотрена";
-    } else {
-      return "Что-то пошло не так";
-    }
-  },
-  getFullPrice: function () {
-    appData.fullPrice = appData.screenPrice + appData.allServicePrices;
-  },
-  getTitle: function () {
-    appData.title = appData.title.trim();
-    appData.title = appData.title.toLowerCase();
-    appData.title = appData.title.charAt(0).toUpperCase() + appData.title.slice(1);
-  },
-  getServicePercentPrices: function () {
-    appData.servicePercentPrice = Math.ceil(
-      appData.fullPrice - appData.fullPrice * (appData.rollback / 100)
-    );
-  },
-  splitString: function (stringToSplit, separator) {
-    return stringToSplit.split(separator);
-  },
-  logger: function () {
-    console.log(appData.fullPrice);
-    console.log(appData.servicePercentPrice);
-    console.log(appData.servicesArr);
-  },
-  start: function () {
-    appData.asking();
-    appData.addPrices();
-    appData.getFullPrice();
-    appData.getServicePercentPrices();
-    appData.getTitle();
-
-    appData.logger();
-  },
+const todayWeekday = function () {
+  var now = new Date().getDay();
+  if (now == 0) {
+    return 6;
+  } else {
+    return --now;
+  }
 };
 
-appData.start();
+const hourDeclination = function () {
+  let now = new Date();
+  if (now.getHours() === 1 || now.getHours() === 21) {
+    return " час ";
+  } else if (now.getHours() === 2 || now.getHours() === 3 || now.getHours() === 4 || now.getHours() === 22 || now.getHours() === 23 || now.getHours() === 24) {
+    return " часа ";
+  } else {
+    return " часов ";
+  }
+}
+
+const minuteDeclination = function () {
+  let now = new Date();
+  switch (now.getMinutes()) {
+    case 1:
+    case 21:
+    case 31:
+    case 41:
+    case 51:
+      return " минута ";
+    case 2:
+    case 3:
+    case 4:
+    case 22:
+    case 23:
+    case 24:
+    case 32:
+    case 33:
+    case 34:
+    case 42:
+    case 43:
+    case 44:
+    case 52:
+    case 53:
+    case 54:
+      return " минуты ";
+    default:
+      return " минут ";
+  }
+}
+
+const secondDeclination = function () {
+  let now = new Date();
+  switch (now.getSeconds()) {
+    case 1:
+    case 21:
+    case 31:
+    case 41:
+    case 51:
+      return " секунда";
+    case 2:
+    case 3:
+    case 4:
+    case 22:
+    case 23:
+    case 24:
+    case 32:
+    case 33:
+    case 34:
+    case 42:
+    case 43:
+    case 44:
+    case 52:
+    case 53:
+    case 54:
+      return " секунды ";
+    default:
+      return " секунд";
+  }
+}
+
+const zeroChecker = function (digit) {
+  if (digit <= 9) {
+    return ("0" + digit);
+  } else {
+    return digit;
+  }
+}
+
+function showTime() {
+  let now = new Date();
+
+  document.getElementById("format1").innerHTML =  "<b>Сегодня " + arrWeekdays[todayWeekday()] + ", " + now.getDate() + " " + arrMonths[now.getMonth()] + " " + now.getFullYear() + " года, " + now.getHours() + hourDeclination() + now.getMinutes() + minuteDeclination() + now.getSeconds() + secondDeclination() + "</b><br/>";
+  console.log("<b>Сегодня " + arrWeekdays[todayWeekday()] + ", " + now.getDate() + " " + arrMonths[now.getMonth()] + " " + now.getFullYear() + " года, " + now.getHours() + hourDeclination() + now.getMinutes() + minuteDeclination() + now.getSeconds() + secondDeclination() + "</b><br/>");
+
+  document.getElementById("format2").innerHTML = "<b>" + zeroChecker(now.getDate()) + "." + zeroChecker(1+now.getMonth()) + "." + now.getFullYear() + " - " + zeroChecker(now.getHours()) + ":" + zeroChecker(now.getMinutes()) + ":" + zeroChecker(now.getSeconds()) + "</b><br/>";
+}
